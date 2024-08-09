@@ -64,5 +64,15 @@ public class AdminService {
         return orderRepository.findAll();
     }
 
+    public Optional<OrderModel> getOrderByCode(String code){
+        return this.orderRepository.findByCode(code);
+    }
 
+
+    public Optional<OrderModel> getOrderByTicket(String ticket) {
+        return this.orderRepository.findByTicketProduct(ticket);
+    }
+
+    public String generateCode() {
+    }
 }

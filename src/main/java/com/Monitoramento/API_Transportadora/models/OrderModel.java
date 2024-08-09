@@ -1,5 +1,6 @@
 package com.Monitoramento.API_Transportadora.models;
 
+import com.Monitoramento.API_Transportadora.Enuns.DeliveryStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,8 +18,12 @@ public class OrderModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private ProductsModel product;
+    private StatusModel status;
+
+    private DeliveryStatus deliveryStatus;
 
     private String code;
+
+    private String ticketProduct;
 
 }
