@@ -1,6 +1,5 @@
 package com.Monitoramento.API_Transportadora.models;
 
-import com.Monitoramento.API_Transportadora.Enuns.TypeProducts;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,15 +12,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductsModel {
+public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String ticketIdentication;
+    private String name;
+    private String lastName;
+    private String cpf;
 
-    private boolean possessOrder = false;
-
-    private TypeProducts typeProducts;
-
+    private String email;
+    private String password;
+    private boolean isAdmin = true;
 }

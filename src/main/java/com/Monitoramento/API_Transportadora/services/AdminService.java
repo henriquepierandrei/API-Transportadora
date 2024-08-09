@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -21,5 +22,40 @@ public class AdminService {
     public Optional<ProductsModel> getProductByTicket(String ticket){
         return productsRepository.findByTicketIdentification(ticket);
     }
+
+    public boolean getProductByTicketBoolean(String ticket){
+        Optional<ProductsModel> productsModelOptional = this.productsRepository.findByTicketIdentification(ticket);
+        if (productsModelOptional.isEmpty()){
+            return true;
+        }
+        return false;
+
+    }
+
+
+    public String ticketGenerate(){
+        Random random = new Random();
+        StringBuilder ticket = new StringBuilder();
+
+        while(true){
+            for (int i = 0; i < 15; i ++){
+                int number = random.nextInt(10);
+                ticket.append(String.valueOf(number));
+            }
+            if (getProductByTicketBoolean(ticket.toString())){
+                return ticket.toString();
+            }
+            ticket.setLength(0);
+
+        }
+
+
+    }
+
+
+    public void save(ProductsModel productsModel){
+        this.productsRepository.save(productsModel);
+    }
+
 
 }
