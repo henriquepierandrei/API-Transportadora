@@ -2,6 +2,10 @@ package com.Monitoramento.API_Transportadora.controllers;
 
 
 
+import com.Monitoramento.API_Transportadora.dtos.LoginDto;
+import com.Monitoramento.API_Transportadora.dtos.RegisterDto;
+import com.Monitoramento.API_Transportadora.dtos.ResponseDto;
+import com.Monitoramento.API_Transportadora.dtos.ResponseRegisterDto;
 import com.Monitoramento.API_Transportadora.infra.security.TokenService;
 import com.Monitoramento.API_Transportadora.models.UserModel;
 import com.Monitoramento.API_Transportadora.services.AuthService;
