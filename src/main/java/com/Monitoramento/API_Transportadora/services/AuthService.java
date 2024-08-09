@@ -2,7 +2,6 @@ package com.Monitoramento.API_Transportadora.services;
 
 
 import com.Monitoramento.API_Transportadora.models.UserModel;
-import com.Monitoramento.API_Transportadora.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

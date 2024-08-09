@@ -2,9 +2,7 @@ package com.Monitoramento.API_Transportadora.infra.security;
 
 
 import com.Monitoramento.API_Transportadora.models.UserModel;
-import com.Monitoramento.API_Transportadora.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
