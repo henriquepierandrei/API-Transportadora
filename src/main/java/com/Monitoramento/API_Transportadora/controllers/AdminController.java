@@ -1,6 +1,7 @@
 package com.Monitoramento.API_Transportadora.controllers;
 
 import com.Monitoramento.API_Transportadora.dtos.ProductDto;
+import com.Monitoramento.API_Transportadora.models.OrderModel;
 import com.Monitoramento.API_Transportadora.models.ProductsModel;
 import com.Monitoramento.API_Transportadora.services.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,13 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.OK).body("Product registered, Ticket Product: ["+productsModel.getTicketIdentication()+"]");
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity getAllOrders(){
+        List<OrderModel> orderModelList = this.adminService.getAllOrders();
+        if (orderModelList.isEmpty()){return ResponseEntity.badRequest().body("No Orders exists!");}
+        return ResponseEntity.status(HttpStatus.FOUND).body(orderModelList);
     }
 
 }
