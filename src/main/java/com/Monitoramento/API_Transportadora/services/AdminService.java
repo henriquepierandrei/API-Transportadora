@@ -74,5 +74,7 @@ public class AdminService {
     }
 
     public String generateCode() {
+        Random random = new Random();
+
     }
 }
