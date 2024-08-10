@@ -27,8 +27,8 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.FOUND).body(userModelList);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity getProductByticket(@RequestParam String ticket){
+    @GetMapping("/products/{ticket}")
+    public ResponseEntity getProductByticket(@PathVariable(value = "ticket") String ticket){
         Optional<ProductsModel> productsModel = this.adminService.getProductByTicket(ticket);
         if (productsModel.isEmpty()){return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No products registered with the code!");}
         return ResponseEntity.status(HttpStatus.FOUND).body(productsModel.get());
@@ -41,9 +41,9 @@ public class AdminController {
         if (productsModelOptional.isEmpty()){
             ProductsModel productsModel = new ProductsModel();
             productsModel.setTypeProducts(productDto.typeProducts());
-            productsModel.setTicketIdentication(this.adminService.ticketGenerate());
-            this.adminService.save(productsModel);
-            return ResponseEntity.status(HttpStatus.OK).body("Product registered, Ticket Product: ["+productsModel.getTicketIdentication()+"]");
+            productsModel.setTicket(this.adminService.ticketGenerate());
+            this.adminService.saveProduct(productsModel);
+            return ResponseEntity.status(HttpStatus.OK).body("Product registered, Ticket Product: ["+productsModel.getTicket()+"]");
         }
         return ResponseEntity.badRequest().build();
     }
@@ -56,23 +56,43 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.FOUND).body(orderModelList);
     }
 
-    @GetMapping("/orders")
-    public ResponseEntity getAllOrders(@RequestParam String code){
+    @GetMapping("/orders/{code}")
+    public ResponseEntity getOrderByCode(@PathVariable(value = "code") String code){
         Optional<OrderModel> orderModelOptional = this.adminService.getOrderByCode(code);
         if (orderModelOptional.isEmpty()){return ResponseEntity.badRequest().body("No Orders founded!");}
         return ResponseEntity.status(HttpStatus.FOUND).body(orderModelOptional.get());
     }
 
     @PostMapping("/register/orders")
-    public ResponseEntity registerOrders(@RequestBody OrderDto orderDto){
-        Optional<OrderModel> orderModelOptional = this.adminService.getOrderByTicket(orderDto.ticket());
-        if (orderModelOptional.isPresent()){return ResponseEntity.badRequest().build();}
-        OrderModel orderModel = new OrderModel();
-        orderModel.setDeliveryStatus(orderDto.deliveryStatus());
-        orderModel.setStatus(orderDto.statusModel());
-        orderModel.setTicketProduct(orderDto.ticket());
-        orderModel.setCode(this.adminService.generateCode());
-        
+    public ResponseEntity<String> registerOrders(@RequestBody OrderDto orderDto) {
+        try {
+            Optional<OrderModel> orderModelOptional = this.adminService.getOrderByTicket(orderDto.ticket());
+            if (orderModelOptional.isPresent()) {
+                return ResponseEntity.badRequest().body("Product with this ticket already exists.");
+            }
+
+            OrderModel orderModel = new OrderModel();
+            orderModel.setDeliveryStatus(orderDto.deliveryStatus());
+            orderModel.setStatus(orderDto.statusModel());
+            orderModel.setTicketProduct(orderDto.ticket());
+
+            while (true) {
+                String code2 = this.adminService.code();
+                if (adminService.getProductByCode(code2)) {
+                    orderModel.setCode(code2);
+                    break;
+                }
+            }
+
+            this.adminService.saveOrder(orderModel);
+            return ResponseEntity.ok("Order Registered, CODE TRACKING: " + orderModel.getCode());
+
+        } catch (Exception e) {
+            // Log the exception if needed
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
+        }
     }
+
 
 }

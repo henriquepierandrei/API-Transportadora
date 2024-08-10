@@ -20,6 +20,7 @@ public class UserModel {
     private String name;
     private String lastName;
     private String cpf;
+    private String phone;
 
     private String email;
     private String password;

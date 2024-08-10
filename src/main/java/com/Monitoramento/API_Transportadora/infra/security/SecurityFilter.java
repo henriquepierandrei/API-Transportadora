@@ -1,6 +1,7 @@
 package com.Monitoramento.API_Transportadora.infra.security;
 
 import com.Monitoramento.API_Transportadora.models.UserModel;
+import com.Monitoramento.API_Transportadora.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

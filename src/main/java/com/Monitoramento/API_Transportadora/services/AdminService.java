@@ -7,9 +7,7 @@ import com.Monitoramento.API_Transportadora.repositories.ProductsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +16,17 @@ public class AdminService {
     private final OrderRepository orderRepository;
 
 
+
     public List<ProductsModel> getAllProducts(){
         return productsRepository.findAll();
     }
 
     public Optional<ProductsModel> getProductByTicket(String ticket){
-        return productsRepository.findByTicketIdentification(ticket);
+        return productsRepository.findByTicket(ticket);
     }
 
     public boolean getProductByTicketBoolean(String ticket){
-        Optional<ProductsModel> productsModelOptional = this.productsRepository.findByTicketIdentification(ticket);
+        Optional<ProductsModel> productsModelOptional = this.productsRepository.findByTicket(ticket);
         if (productsModelOptional.isEmpty()){
             return true;
         }
@@ -56,7 +55,7 @@ public class AdminService {
     }
 
 
-    public void save(ProductsModel productsModel){
+    public void saveProduct(ProductsModel productsModel){
         this.productsRepository.save(productsModel);
     }
 
@@ -73,8 +72,37 @@ public class AdminService {
         return this.orderRepository.findByTicketProduct(ticket);
     }
 
-    public String generateCode() {
+    public String code(){
         Random random = new Random();
+        List<String> list = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
 
+        for(int i = 0; i < 8; i++){
+            char letraAleatoria = (char) (random.nextInt(26) + 'A');
+            int numbers = random.nextInt(10);
+            list.add(String.valueOf(letraAleatoria));
+            list.add(String.valueOf(numbers));
+        }
+        Collections.shuffle(list);
+        for(String val : list){
+            stringBuilder.append(val);
+        }
+        stringBuilder.append("BR");
+
+
+        System.out.println(stringBuilder);
+        return stringBuilder.toString();
+
+    }
+
+    public boolean getProductByCode(String code){
+        Optional<OrderModel> order = this.orderRepository.findByCode(code);
+        if (order.isEmpty()){return true;}
+        return false;
+
+    }
+
+    public void saveOrder(OrderModel orderModel){
+        this.orderRepository.save(orderModel);
     }
 }
