@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,18 +62,16 @@ public class AdminController {
     @PostMapping("/register/orders")
     public ResponseEntity<String> registerOrders(@RequestBody RegisterOrderDto registerOrderDto) {
         try {
-            // Extrair OrderDto e StatusDto do RegisterOrderDto
             OrderDto orderDto = registerOrderDto.orderDto();
             StatusDto statusDto = registerOrderDto.statusDto();
 
-            // Verificar se o pedido já existe
             Optional<OrderModel> orderModelOptional = this.adminService.getOrderByTicket(orderDto.ticketProduct());
             if (orderModelOptional.isPresent()) {
                 return ResponseEntity.badRequest().body("Product with this ticket already exists.");
             }
 
-            // Criar e configurar OrderModel e StatusModel
             OrderModel orderModel = new OrderModel();
+            List<StatusModel> statusModelList = new ArrayList<>();
             StatusModel statusModel = new StatusModel();
 
             while (true) {
@@ -84,14 +83,14 @@ public class AdminController {
                 }
             }
 
-            // Configurar StatusModel com base no StatusDto
             statusModel.setCity(statusDto.city());
             statusModel.setTime(statusDto.time());
             statusModel.setDate(statusDto.date());
             statusModel.setCondition(statusDto.condition());
+            statusModelList.add(statusModel);
 
 
-            orderModel.setStatus(statusModel);
+            orderModel.setStatus(statusModelList);
             orderModel.setTicketProduct(orderDto.ticketProduct());
 
             this.adminService.saveStatus(statusModel);
@@ -101,11 +100,14 @@ public class AdminController {
             return ResponseEntity.ok("Order Registered, CODE TRACKING: " + orderModel.getCode());
 
         } catch (Exception e) {
-            // Log the exception if needed
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
         }
     }
+
+//    @PostMapping("/update/order/{code}")
+//    public ResponseEntity<String> update(@RequestBody StatusDto statusDto)
+
 
 
 
