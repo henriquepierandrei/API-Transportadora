@@ -17,7 +17,6 @@ public class ProductsModel {
 
     private String ticket;
 
-    private boolean possessOrder = false;
 
     private TypeProducts typeProducts;
 

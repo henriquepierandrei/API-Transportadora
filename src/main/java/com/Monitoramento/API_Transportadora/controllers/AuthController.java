@@ -59,7 +59,7 @@ public class AuthController {
             newUser.setEmail(body.email());
             newUser.setName(body.name());
             newUser.setLastName(body.lastName());
-            if (!this.cpfValidatorService.isValid(body.cpf())){return ResponseEntity.badRequest().body("CPF Invalid!");}
+            if (this.cpfValidatorService.isValid(body.cpf())){return ResponseEntity.badRequest().body("CPF Invalid!");}
             newUser.setCpf(body.cpf());
 
             this.getUsername.save(newUser);

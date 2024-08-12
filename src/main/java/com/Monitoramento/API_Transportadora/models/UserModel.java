@@ -24,5 +24,5 @@ public class UserModel {
 
     private String email;
     private String password;
-    private boolean isAdmin = true;
+    private boolean isAdmin = false;
 }

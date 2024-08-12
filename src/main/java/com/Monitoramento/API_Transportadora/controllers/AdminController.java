@@ -37,11 +37,11 @@ public class AdminController {
 
     @PostMapping("/register/product")
     public ResponseEntity registerProduct(@RequestBody ProductDto productDto){
-        Optional<ProductsModel> productsModelOptional = this.adminService.getProductByTicket(productDto.ticket());
+        Optional<ProductsModel> productsModelOptional = this.adminService.getProductByTicketAndTypeProducts(productDto.ticket(), productDto.typeProducts());
         if (productsModelOptional.isEmpty()){
             ProductsModel productsModel = new ProductsModel();
             productsModel.setTypeProducts(productDto.typeProducts());
-            productsModel.setTicket(this.adminService.ticketGenerate());
+            productsModel.setTicket(productDto.ticket());
             this.adminService.saveProduct(productsModel);
             return ResponseEntity.status(HttpStatus.OK).body("Product registered, Ticket Product: ["+productsModel.getTicket()+"]");
         }
@@ -56,12 +56,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.FOUND).body(orderModelList);
     }
 
-    @GetMapping("/orders/{code}")
-    public ResponseEntity getOrderByCode(@PathVariable(value = "code") String code){
-        Optional<OrderModel> orderModelOptional = this.adminService.getOrderByCode(code);
-        if (orderModelOptional.isEmpty()){return ResponseEntity.badRequest().body("No Orders founded!");}
-        return ResponseEntity.status(HttpStatus.FOUND).body(orderModelOptional.get());
-    }
+
 
     @PostMapping("/register/orders")
     public ResponseEntity<String> registerOrders(@RequestBody OrderDto orderDto) {

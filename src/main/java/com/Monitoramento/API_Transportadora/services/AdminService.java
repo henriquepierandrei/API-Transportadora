@@ -1,5 +1,6 @@
 package com.Monitoramento.API_Transportadora.services;
 
+import com.Monitoramento.API_Transportadora.Enuns.TypeProducts;
 import com.Monitoramento.API_Transportadora.models.OrderModel;
 import com.Monitoramento.API_Transportadora.models.ProductsModel;
 import com.Monitoramento.API_Transportadora.repositories.OrderRepository;
@@ -21,8 +22,8 @@ public class AdminService {
         return productsRepository.findAll();
     }
 
-    public Optional<ProductsModel> getProductByTicket(String ticket){
-        return productsRepository.findByTicket(ticket);
+    public Optional<ProductsModel> getProductByTicketAndTypeProducts(String ticket, TypeProducts typeProducts){
+        return productsRepository.findByTicketAndTypeProducts(ticket, typeProducts);
     }
 
     public boolean getProductByTicketBoolean(String ticket){
@@ -104,5 +105,9 @@ public class AdminService {
 
     public void saveOrder(OrderModel orderModel){
         this.orderRepository.save(orderModel);
+    }
+
+    public Optional<ProductsModel> getProductByTicket(String ticket) {
+        return this.productsRepository.findByTicket(ticket);
     }
 }
