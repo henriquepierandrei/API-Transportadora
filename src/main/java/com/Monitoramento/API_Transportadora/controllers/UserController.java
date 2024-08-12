@@ -21,7 +21,7 @@ public class UserController {
     private final AdminService adminService;
     private final UserService userService;
 
-    @GetMapping("/orders/{code}")
+    @GetMapping("/order/{code}")
     public ResponseEntity getOrderByCode(@PathVariable(value = "code") String code){
         try {
             OrderModel orderModel= this.userService.getOrders(code);

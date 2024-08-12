@@ -105,8 +105,44 @@ public class AdminController {
         }
     }
 
-//    @PostMapping("/update/order/{code}")
-//    public ResponseEntity<String> update(@RequestBody StatusDto statusDto)
+    @PostMapping("/update/order/{code}")
+    public ResponseEntity<String> update(@RequestBody StatusDto statusDto, @PathVariable(value = "code") String code) {
+        try {
+            Optional<OrderModel> orderModelOptional = this.adminService.getOrderByCode(code);
+            if (orderModelOptional.isEmpty()) {
+                return ResponseEntity.badRequest().body("Order does not exist!");
+            }
+
+            OrderModel orderModel = orderModelOptional.get();
+
+            // Atualiza o StatusModel com base no StatusDto
+            StatusModel statusModel = new StatusModel();
+            statusModel.setCity(statusDto.city());
+            statusModel.setTime(statusDto.time());
+            statusModel.setDate(statusDto.date());
+            statusModel.setCondition(statusDto.condition());
+
+
+
+            List<StatusModel> statusModelList = orderModel.getStatus();
+            if (statusModelList == null) {
+                statusModelList = new ArrayList<>();
+            }
+            statusModelList.add(statusModel);
+            orderModel.setStatus(statusModelList);
+
+            // Salva o novo StatusModel
+            this.adminService.saveStatus(statusModel);
+
+            // Atualiza a ordem com a nova lista de status
+            this.adminService.saveOrder(orderModel);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Order updated successfully.");
+    }
+
 
 
 
