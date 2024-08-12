@@ -3,8 +3,10 @@ package com.Monitoramento.API_Transportadora.services;
 import com.Monitoramento.API_Transportadora.Enuns.TypeProducts;
 import com.Monitoramento.API_Transportadora.models.OrderModel;
 import com.Monitoramento.API_Transportadora.models.ProductsModel;
+import com.Monitoramento.API_Transportadora.models.StatusModel;
 import com.Monitoramento.API_Transportadora.repositories.OrderRepository;
 import com.Monitoramento.API_Transportadora.repositories.ProductsRepository;
+import com.Monitoramento.API_Transportadora.repositories.StatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.*;
 public class AdminService {
     private final ProductsRepository productsRepository;
     private final OrderRepository orderRepository;
+    private final StatusRepository statusRepository;
 
 
 
@@ -109,5 +112,9 @@ public class AdminService {
 
     public Optional<ProductsModel> getProductByTicket(String ticket) {
         return this.productsRepository.findByTicket(ticket);
+    }
+
+    public void saveStatus(StatusModel statusModel) {
+        this.statusRepository.save(statusModel);
     }
 }

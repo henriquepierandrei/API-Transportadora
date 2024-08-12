@@ -1,9 +1,9 @@
 package com.Monitoramento.API_Transportadora.controllers;
 
-import com.Monitoramento.API_Transportadora.dtos.OrderDto;
-import com.Monitoramento.API_Transportadora.dtos.ProductDto;
+import com.Monitoramento.API_Transportadora.dtos.*;
 import com.Monitoramento.API_Transportadora.models.OrderModel;
 import com.Monitoramento.API_Transportadora.models.ProductsModel;
+import com.Monitoramento.API_Transportadora.models.StatusModel;
 import com.Monitoramento.API_Transportadora.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,25 +59,43 @@ public class AdminController {
 
 
     @PostMapping("/register/orders")
-    public ResponseEntity<String> registerOrders(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<String> registerOrders(@RequestBody RegisterOrderDto registerOrderDto) {
         try {
-            Optional<OrderModel> orderModelOptional = this.adminService.getOrderByTicket(orderDto.ticket());
+            // Extrair OrderDto e StatusDto do RegisterOrderDto
+            OrderDto orderDto = registerOrderDto.orderDto();
+            StatusDto statusDto = registerOrderDto.statusDto();
+
+            // Verificar se o pedido já existe
+            Optional<OrderModel> orderModelOptional = this.adminService.getOrderByTicket(orderDto.ticketProduct());
             if (orderModelOptional.isPresent()) {
                 return ResponseEntity.badRequest().body("Product with this ticket already exists.");
             }
 
+            // Criar e configurar OrderModel e StatusModel
             OrderModel orderModel = new OrderModel();
-            orderModel.setDeliveryStatus(orderDto.deliveryStatus());
-            orderModel.setStatus(orderDto.statusModel());
-            orderModel.setTicketProduct(orderDto.ticket());
+            StatusModel statusModel = new StatusModel();
 
             while (true) {
                 String code2 = this.adminService.code();
                 if (adminService.getProductByCode(code2)) {
                     orderModel.setCode(code2);
+                    statusModel.setCodeOrder(code2);
                     break;
                 }
             }
+
+            // Configurar StatusModel com base no StatusDto
+            statusModel.setCity(statusDto.city());
+            statusModel.setTime(statusDto.time());
+            statusModel.setDate(statusDto.date());
+            statusModel.setCondition(statusDto.condition());
+
+
+            orderModel.setStatus(statusModel);
+            orderModel.setTicketProduct(orderDto.ticketProduct());
+
+            this.adminService.saveStatus(statusModel);
+
 
             this.adminService.saveOrder(orderModel);
             return ResponseEntity.ok("Order Registered, CODE TRACKING: " + orderModel.getCode());
@@ -88,6 +106,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
         }
     }
+
 
 
 }

@@ -21,7 +21,7 @@ public class StatusModel {
     private long id;
 
     private String city;
-    private Date date;
+    private String date;
     private String time;
     private DeliveryStatus condition;
 

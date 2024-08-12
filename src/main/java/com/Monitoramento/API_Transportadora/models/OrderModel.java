@@ -19,7 +19,6 @@ public class OrderModel {
     private StatusModel status;
 
 
-    private DeliveryStatus deliveryStatus;
 
     private String code;
 

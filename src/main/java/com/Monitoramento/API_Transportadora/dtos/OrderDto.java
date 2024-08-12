@@ -5,5 +5,5 @@ import com.Monitoramento.API_Transportadora.Enuns.TypeProducts;
 import com.Monitoramento.API_Transportadora.models.ProductsModel;
 import com.Monitoramento.API_Transportadora.models.StatusModel;
 
-public record OrderDto(String ticketProduct, StatusModel statusModel, DeliveryStatus deliveryStatus) {
+public record OrderDto(String ticketProduct, DeliveryStatus deliveryStatus) {
 }
